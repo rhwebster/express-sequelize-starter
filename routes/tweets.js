@@ -73,4 +73,34 @@ router.post(
   })
 );
 
+router.put(
+    "/:id(\\d+)", 
+    tweetValidators,
+    handleValidationErrors,
+    asyncHandler(async (req, res) => {
+        const tweetId = req.params.id;
+        const tweet = await Tweet.findByPk(tweetId);
+        if (tweet) {
+            await tweet.update({message: req.body.message})
+            res.json(tweet);
+        } else {
+            next(tweetNotFoundError(tweetId));
+        }
+    })
+)
+
+router.delete(
+    "/:id(\\d+)",
+    asyncHandler(async (req, res) => {
+        const tweetId = req.params.id;
+        const tweet = await Tweet.findByPk(tweetId);
+        if (tweet) {
+            await tweet.destroy()
+            res.status(204).end();
+        } else {
+            next(tweetNotFoundError(tweetId));
+        }
+    })
+);
+
 module.exports = router;
