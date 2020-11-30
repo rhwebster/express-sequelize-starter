@@ -29,7 +29,17 @@ const tweetValidators = [
 router.get(
   "/",
   asyncHandler(async (req, res) => {
-    const tweets = await Tweet.findAll();
+    const tweets = await Tweet.findAll({
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["username"],
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+      attributes: ["message"],
+    });
     res.json({ tweets });
   })
 );
@@ -53,7 +63,8 @@ router.post(
   handleValidationErrors,
   asyncHandler(async (req, res) => {
     const newTweet = await Tweet.create({
-      message: req.body.message,
+      message,
+      userId: req.user.id,
     });
     res.json(newTweet);
   })
