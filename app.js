@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cors({ origin: "http://localhost:4000" }));
 app.use("/", indexRouter);
 app.use("/tweets", tweetsRouter);
-app.use('/users', usersRouter);
+app.use("/users", usersRouter);
 
 // Catch unhandled requests and forward to error handler.
 app.use((req, res, next) => {
